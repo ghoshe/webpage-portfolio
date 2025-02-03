@@ -1,10 +1,40 @@
 "use client";
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Send } from 'lucide-react';
+
+// TypeScript Interfaces
+interface NavItem {
+  href: string;
+  label: string;
+}
+
+interface ExperienceItem {
+  role: string;
+  company: string;
+  duration: string;
+  achievements: string[];
+}
+
+interface ProjectItem {
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  link: string;
+}
 
 // Navigation Component
 const Navigation = () => {
+  const navItems: NavItem[] = [
+    { href: "#experience", label: "Experience" },
+    { href: "#education", label: "Education" },
+    { href: "#projects", label: "Projects" },
+    { href: "#publications", label: "Publications" },
+    { href: "#contact", label: "Contact" }
+  ];
+
   return (
     <nav className="fixed top-0 w-full p-4 bg-black/80 backdrop-blur-lg z-50">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
@@ -12,11 +42,13 @@ const Navigation = () => {
           Eshaan Ghosh
         </a>
         <ul className="flex gap-8">
-          <li><a href="#experience" className="text-white/80 hover:text-white transition-opacity">Experience</a></li>
-          <li><a href="#education" className="text-white/80 hover:text-white transition-opacity">Education</a></li>
-          <li><a href="#projects" className="text-white/80 hover:text-white transition-opacity">Projects</a></li>
-          <li><a href="#publications" className="text-white/80 hover:text-white transition-opacity">Publications</a></li>
-          <li><a href="#contact" className="text-white/80 hover:text-white transition-opacity">Contact</a></li>
+          {navItems.map((item) => (
+            <li key={item.href}>
+              <a href={item.href} className="text-white/80 hover:text-white transition-opacity">
+                {item.label}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </nav>
@@ -25,6 +57,12 @@ const Navigation = () => {
 
 // Hero Component
 const Hero = () => {
+  const stats = [
+    { number: "12+", label: "Years Experience" },
+    { number: "3", label: "Patents" },
+    { number: "30+", label: "Research Papers" }
+  ];
+
   return (
     <section className="h-screen flex flex-col justify-center items-center text-center p-8 gap-8">
       <h1 className="text-6xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
@@ -38,18 +76,12 @@ const Hero = () => {
       </div>
       
       <div className="flex justify-center gap-16 my-8">
-        <div className="text-center">
-          <div className="text-4xl font-bold mb-2">12+</div>
-          <div className="text-sm text-white/60">Years Experience</div>
-        </div>
-        <div className="text-center">
-          <div className="text-4xl font-bold mb-2">3</div>
-          <div className="text-sm text-white/60">Patents</div>
-        </div>
-        <div className="text-center">
-          <div className="text-4xl font-bold mb-2">30+</div>
-          <div className="text-sm text-white/60">Research Papers</div>
-        </div>
+        {stats.map((stat, index) => (
+          <div key={index} className="text-center">
+            <div className="text-4xl font-bold mb-2">{stat.number}</div>
+            <div className="text-sm text-white/60">{stat.label}</div>
+          </div>
+        ))}
       </div>
 
       <a href="#contact" className="bg-white text-black px-8 py-4 rounded-full font-medium hover:scale-105 transition-transform">
@@ -59,8 +91,8 @@ const Hero = () => {
   );
 };
 
-// Experience Component and ExperienceCard Component
-const ExperienceCard = ({ role, company, duration, achievements }) => (
+// Experience Card Component
+const ExperienceCard: React.FC<ExperienceItem> = ({ role, company, duration, achievements }) => (
   <div className="bg-white/5 rounded-2xl p-8 hover:-translate-y-1 transition-transform">
     <div className="flex justify-between items-start mb-4">
       <div>
@@ -71,7 +103,7 @@ const ExperienceCard = ({ role, company, duration, achievements }) => (
     </div>
     <ul className="space-y-4">
       {achievements.map((achievement, index) => (
-        <li key={index} className="pl-6 relative text-gray-300 before:content-['•'] before:absolute before:left-0 before:text-gray-500">
+        <li key={index} className="pl-6 relative text-gray-300 before:content-[&apos;•&apos;] before:absolute before:left-0 before:text-gray-500">
           {achievement}
         </li>
       ))}
@@ -79,8 +111,9 @@ const ExperienceCard = ({ role, company, duration, achievements }) => (
   </div>
 );
 
+// Experience Component
 const Experience = () => {
-  const experiences = [
+  const experiences: ExperienceItem[] = [
     {
       role: "Product Manager, Data Science",
       company: "Veeva Systems",
@@ -130,22 +163,46 @@ const Experience = () => {
   );
 };
 
+// Education Types
+interface EducationItem {
+  school: string;
+  degree: string;
+  field: string;
+  duration: string;
+  logo: string;
+  website?: string;
+}
+
 // Education Card Component
-const EducationCard = ({ school, degree, duration, field, logo }) => (
+const EducationCard: React.FC<EducationItem> = ({ school, degree, field, duration, logo, website }) => (
   <div className="bg-white/5 rounded-2xl p-8 hover:-translate-y-1 transition-transform">
     <div className="flex items-start gap-6">
       <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center p-2">
-        <img 
+        <Image 
           src={logo} 
           alt={`${school} logo`}
+          width={64}
+          height={64}
           className="w-full h-full object-contain"
+          priority
         />
       </div>
       <div className="flex-1">
         <div className="flex justify-between items-start">
           <div>
-            <div className="text-2xl font-semibold text-white">{degree}</div>
-            <div className="text-lg text-gray-400">{school}</div>
+            <h3 className="text-2xl font-semibold text-white">{degree}</h3>
+            {website ? (
+              <a 
+                href={website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg text-gray-400 hover:text-white transition-colors"
+              >
+                {school}
+              </a>
+            ) : (
+              <div className="text-lg text-gray-400">{school}</div>
+            )}
             <div className="text-md text-gray-500 mt-1">{field}</div>
           </div>
           <div className="text-sm text-gray-500">{duration}</div>
@@ -157,34 +214,38 @@ const EducationCard = ({ school, degree, duration, field, logo }) => (
 
 // Education Section Component
 const Education = () => {
-  const education = [
+  const education: EducationItem[] = [
     {
       school: "University of Windsor",
       degree: "Doctor of Philosophy (Ph.D.)",
       field: "Electrical and Computer Engineering",
       duration: "2013 - 2018",
-      logo: "/logos/uwindsor.png" // You'll need to add these logos to your public folder
+      logo: "/logos/uwindsor.png",
+      website: "https://www.uwindsor.ca"
     },
     {
       school: "Harvard Business School",
       degree: "Executive Education",
       field: "Specialization in Entrepreneurship and Innovation",
       duration: "Online",
-      logo: "/logos/harvard.png"
+      logo: "/logos/harvard.png",
+      website: "https://www.hbs.edu"
     },
     {
       school: "Stanford Continuing Studies",
       degree: "Professional Certificate",
       field: "Product Management",
       duration: "Online",
-      logo: "/logos/stanford.png"
+      logo: "/logos/stanford.png",
+      website: "https://continuingstudies.stanford.edu"
     },
     {
       school: "Haldia Institute of Technology",
       degree: "Bachelor of Technology",
       field: "Instrumentation and Control Engineering",
       duration: "2008 - 2012",
-      logo: "/logos/hit.png"
+      logo: "/logos/hit.png",
+      website: "https://www.hithaldia.ac.in"
     }
   ];
 
@@ -202,9 +263,8 @@ const Education = () => {
   );
 };
 
-
-// Projects Component and ProjectCard Component
-const ProjectCard = ({ title, description, image, tags, link }) => (
+// Project Card Component
+const ProjectCard: React.FC<ProjectItem> = ({ title, description, image, tags, link }) => (
   <div className="bg-white/5 rounded-2xl overflow-hidden hover:-translate-y-1 transition-transform">
     <div className="h-48 bg-gradient-to-br from-gray-800 to-gray-600 flex items-center justify-center text-2xl font-semibold">
       {image}
@@ -226,8 +286,9 @@ const ProjectCard = ({ title, description, image, tags, link }) => (
   </div>
 );
 
+// Projects Component
 const Projects = () => {
-  const projects = [
+  const projects: ProjectItem[] = [
     {
       title: "Veeva Compass National & Prescriber",
       description: "Advanced predictive analytics platform for U.S. pharmaceutical markets, featuring sophisticated data projection and visualization capabilities.",
@@ -264,365 +325,426 @@ const Projects = () => {
     </section>
   );
 };
+
+// TypeScript Interfaces
+interface PublicationItem {
+  title: string;
+  authors: string;
+  venue: string;
+  year: string;
+}
+
+interface CategoryProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+interface PublicationData {
+  conferences: PublicationItem[];
+  journals: PublicationItem[];
+  patents: PublicationItem[];
+}
+
 // Publications Helper Components
-const PublicationCategory = ({ title, children }) => (
-    <div className="mb-12">
-      <h3 className="text-xl font-semibold mb-6 text-white/90">{title}</h3>
-      <div className="space-y-6">
-        {children}
-      </div>
+const PublicationCategory: React.FC<CategoryProps> = ({ title, children }) => (
+  <div className="mb-12">
+    <h3 className="text-xl font-semibold mb-6 text-white/90">{title}</h3>
+    <div className="space-y-6">
+      {children}
     </div>
-  );
-  
-  const PublicationItem = ({ title, authors, venue, year }) => (
-    <div className="bg-white/10 p-6 rounded-xl hover:bg-white/15 transition-colors backdrop-blur-sm">
-      <h4 className="text-white font-medium mb-2">{title}</h4>
-      <p className="text-white/80 text-sm mb-2">{authors}</p>
-      <div className="flex justify-between items-center">
-        <span className="text-white/60 text-sm italic">{venue}</span>
-        <span className="text-white/80 text-sm font-medium">{year}</span>
-      </div>
+  </div>
+);
+
+const PublicationItem: React.FC<PublicationItem> = ({ title, authors, venue, year }) => (
+  <div className="bg-white/10 p-6 rounded-xl hover:bg-white/15 transition-colors backdrop-blur-sm">
+    <h4 className="text-white font-medium mb-2">{title}</h4>
+    <p className="text-white/80 text-sm mb-2">{authors}</p>
+    <div className="flex justify-between items-center">
+      <span className="text-white/60 text-sm italic">{venue}</span>
+      <span className="text-white/80 text-sm font-medium">{year}</span>
     </div>
-  );
+  </div>
+);
+
+// Main Publications Component
+const Publications = () => {
+  const [filter, setFilter] = useState('all');
   
-  // Main Publications Component
-  const Publications = () => {
-    const [filter, setFilter] = useState('all');
+  const categories = [
+    { id: 'all', label: 'All' },
+    { id: 'journal', label: 'Journals' },
+    { id: 'conference', label: 'Conferences' },
+    { id: 'patent', label: 'Patents' }
+  ] as const;
+
+  const publications: PublicationData = {
+    conferences: [
+      {
+        title: "Non-Dominated Sorting Genetic Algorithm Based Investigation of Optimal Odd Slot Numbers for Stator Shifted Fractional-Slot Wound PMSMs",
+        authors: "S. Mukundan, H. Dhulipati, E. Ghosh, G. Feng, J. Tjong and N. C. Kar",
+        venue: "IEEE Energy Conversion Congress and Exposition (ECCE)",
+        year: "2019"
+      },
+      {
+        title: "DNN predictive magnetic flux control for harmonics compensation in a magnetically unbalanced induction motor",
+        authors: "E. Ghosh, A. Mollaeian, S. Kim and N. C. Kar",
+        venue: "IEEE International Magnetics Conference",
+        year: "2017"
+      }
+    ],
+    journals: [
+      {
+        title: "Advanced Design Optimization Technique for Torque Profile Improvement in Six-Phase PMSM Using Supervised Machine Learning for Direct-Drive EV",
+        authors: "H. Dhulipati, E. Ghosh, S. Mukundan, P. Korta, J. Tjong and N. C. Kar",
+        venue: "IEEE Transactions on Energy Conversion",
+        year: "2019"
+      }
+    ],
+    patents: [
+      {
+        title: "Systems and Methods for Generating and Displaying a Graphical User Interface Including an Animated Graph",
+        authors: "Eshaan Ghosh et al.",
+        venue: "U.S. Patent Office",
+        year: "2024"
+      }
+    ]
+  };
+
+  const stats = [
+    { number: "30+", label: "Research Papers" },
+    { number: "3", label: "Patents" },
+    { number: "12+", label: "Technical Reports" }
+  ];
+
+  return (
+    <section id="publications" className="py-24 px-8 bg-black">
+      <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+        Publications & Patents
+      </h2>
+      
+      <div className="max-w-4xl mx-auto mb-16 grid grid-cols-3 gap-8">
+        {stats.map((stat, index) => (
+          <div key={index} className="bg-white/10 p-8 rounded-xl text-center backdrop-blur-lg">
+            <div className="text-5xl font-bold mb-3 text-white">{stat.number}</div>
+            <div className="text-lg text-white/80">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="max-w-4xl mx-auto mb-12">
+        <div className="flex justify-center gap-4 flex-wrap">
+          {categories.map(category => (
+            <button
+              key={category.id}
+              onClick={() => setFilter(category.id)}
+              className={`px-6 py-2 rounded-full transition-colors ${
+                filter === category.id 
+                  ? 'bg-white text-black font-medium' 
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+              aria-label={`Filter by ${category.label}`}
+            >
+              {category.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto">
+        {(filter === 'all' || filter === 'conference') && (
+          <PublicationCategory title="Conference Publications">
+            {publications.conferences.map((pub, index) => (
+              <PublicationItem key={index} {...pub} />
+            ))}
+          </PublicationCategory>
+        )}
+        
+        {(filter === 'all' || filter === 'journal') && (
+          <PublicationCategory title="Journal Publications">
+            {publications.journals.map((pub, index) => (
+              <PublicationItem key={index} {...pub} />
+            ))}
+          </PublicationCategory>
+        )}
+        
+        {(filter === 'all' || filter === 'patent') && (
+          <PublicationCategory title="Patents">
+            {publications.patents.map((pub, index) => (
+              <PublicationItem key={index} {...pub} />
+            ))}
+          </PublicationCategory>
+        )}
+      </div>
+    </section>
+  );
+};
+
+// TypeScript Interfaces
+interface FormData {
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+}
+
+interface ContactLinkProps {
+  href: string;
+  children: React.ReactNode;
+}
+
+// Contact Component
+const Contact = () => {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus('sending');
     
-    const categories = [
-      { id: 'all', label: 'All' },
-      { id: 'journal', label: 'Journals' },
-      { id: 'conference', label: 'Conferences' },
-      { id: 'patent', label: 'Patents' }
-    ];
-  
-    const publications = {
-      conferences: [
-        {
-          title: "Non-Dominated Sorting Genetic Algorithm Based Investigation of Optimal Odd Slot Numbers for Stator Shifted Fractional-Slot Wound PMSMs",
-          authors: "S. Mukundan, H. Dhulipati, E. Ghosh, G. Feng, J. Tjong and N. C. Kar",
-          venue: "IEEE Energy Conversion Congress and Exposition (ECCE)",
-          year: "2019"
-        },
-        {
-          title: "DNN predictive magnetic flux control for harmonics compensation in a magnetically unbalanced induction motor",
-          authors: "E. Ghosh, A. Mollaeian, S. Kim and N. C. Kar",
-          venue: "IEEE International Magnetics Conference",
-          year: "2017"
-        }
-      ],
-      journals: [
-        {
-          title: "Advanced Design Optimization Technique for Torque Profile Improvement in Six-Phase PMSM Using Supervised Machine Learning for Direct-Drive EV",
-          authors: "H. Dhulipati, E. Ghosh, S. Mukundan, P. Korta, J. Tjong and N. C. Kar",
-          venue: "IEEE Transactions on Energy Conversion",
-          year: "2019"
-        }
-      ],
-      patents: [
-        {
-          title: "Systems and Methods for Generating and Displaying a Graphical User Interface Including an Animated Graph",
-          authors: "Eshaan Ghosh et al.",
-          venue: "U.S. Patent Office",
-          year: "2024"
-        }
-      ]
-    };
-  
-    return (
-      <section id="publications" className="py-24 px-8 bg-black">
-        <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-          Publications & Patents
+    try {
+      // Email sending logic will go here with email service integration
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setStatus('success');
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    } catch (e) {
+      setStatus('error');
+      console.error('Error sending message:', e);
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const ContactLink: React.FC<ContactLinkProps> = ({ href, children }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-white hover:text-white/80 transition-colors"
+    >
+      {children}
+    </a>
+  );
+
+  return (
+    <section id="contact" className="py-24 px-8 bg-gradient-to-b from-gray-900 to-black">
+      <div className="max-w-4xl mx-auto">
+        <h2 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+          Let&apos;s Connect
         </h2>
         
-        <div className="max-w-4xl mx-auto mb-16 grid grid-cols-3 gap-8">
-          <div className="bg-white/10 p-8 rounded-xl text-center backdrop-blur-lg">
-            <div className="text-5xl font-bold mb-3 text-white">30+</div>
-            <div className="text-lg text-white/80">Research Papers</div>
-          </div>
-          <div className="bg-white/10 p-8 rounded-xl text-center backdrop-blur-lg">
-            <div className="text-5xl font-bold mb-3 text-white">3</div>
-            <div className="text-lg text-white/80">Patents</div>
-          </div>
-          <div className="bg-white/10 p-8 rounded-xl text-center backdrop-blur-lg">
-            <div className="text-5xl font-bold mb-3 text-white">12+</div>
-            <div className="text-lg text-white/80">Technical Reports</div>
-          </div>
-        </div>
-  
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="flex justify-center gap-4 flex-wrap">
-            {categories.map(category => (
+        <p className="text-center text-white/80 mb-12 max-w-2xl mx-auto">
+          I&apos;m available for consulting, speaking engagements, and research collaborations. 
+          Whether you have a specific project in mind or just want to discuss potential opportunities, 
+          I&apos;d love to hear from you.
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-12">
+          {/* Contact Form */}
+          <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-lg">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
+                           text-white placeholder-white/40 focus:outline-none focus:ring-2 
+                           focus:ring-white/20 transition-all"
+                  placeholder="John Doe"
+                  aria-label="Your name"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+                  Your Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
+                           text-white placeholder-white/40 focus:outline-none focus:ring-2 
+                           focus:ring-white/20 transition-all"
+                  placeholder="john@example.com"
+                  aria-label="Your email address"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">
+                  Your Phone (Optional)
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
+                           text-white placeholder-white/40 focus:outline-none focus:ring-2 
+                           focus:ring-white/20 transition-all"
+                  placeholder="+1 (234) 567-8900"
+                  aria-label="Your phone number (optional)"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="subject" className="block text-sm font-medium text-white mb-2">
+                  Subject
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
+                           text-white placeholder-white/40 focus:outline-none focus:ring-2 
+                           focus:ring-white/20 transition-all"
+                  placeholder="Let&apos;s collaborate"
+                  aria-label="Message subject"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={5}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
+                           text-white placeholder-white/40 focus:outline-none focus:ring-2 
+                           focus:ring-white/20 transition-all resize-none"
+                  placeholder="Your message here..."
+                  aria-label="Your message"
+                />
+              </div>
+
               <button
-                key={category.id}
-                onClick={() => setFilter(category.id)}
-                className={`px-6 py-2 rounded-full transition-colors ${
-                  filter === category.id 
-                    ? 'bg-white text-black font-medium' 
-                    : 'bg-white/10 text-white hover:bg-white/20'
-                }`}
+                type="submit"
+                disabled={status === 'sending'}
+                className="w-full bg-white text-black py-3 rounded-lg font-medium 
+                         hover:bg-white/90 transition-colors flex items-center justify-center gap-2
+                         disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label={status === 'sending' ? 'Sending message...' : 'Send message'}
               >
-                {category.label}
+                {status === 'sending' ? (
+                  'Sending...'
+                ) : (
+                  <>
+                    Send Message
+                    <Send className="w-5 h-5" aria-hidden="true" />
+                  </>
+                )}
               </button>
-            ))}
-          </div>
-        </div>
-  
-        <div className="max-w-4xl mx-auto">
-          {(filter === 'all' || filter === 'conference') && (
-            <PublicationCategory title="Conference Publications">
-              {publications.conferences.map((pub, index) => (
-                <PublicationItem key={index} {...pub} />
-              ))}
-            </PublicationCategory>
-          )}
-          
-          {(filter === 'all' || filter === 'journal') && (
-            <PublicationCategory title="Journal Publications">
-              {publications.journals.map((pub, index) => (
-                <PublicationItem key={index} {...pub} />
-              ))}
-            </PublicationCategory>
-          )}
-          
-          {(filter === 'all' || filter === 'patent') && (
-            <PublicationCategory title="Patents">
-              {publications.patents.map((pub, index) => (
-                <PublicationItem key={index} {...pub} />
-              ))}
-            </PublicationCategory>
-          )}
-        </div>
-      </section>
-    );
-  };
-  // Contact Component
-const Contact = () => {
-    const [formData, setFormData] = useState({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    });
-    const [status, setStatus] = useState('');
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setStatus('sending');
-      
-      try {
-        // Email sending logic will go here with email service integration
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setStatus('success');
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-      } catch (error) {
-        setStatus('error');
-      }
-    };
-  
-    const handleChange = (e) => {
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value
-      });
-    };
-  
-    return (
-      <section id="contact" className="py-24 px-8 bg-gradient-to-b from-gray-900 to-black">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-            Let's Connect
-          </h2>
-          
-          <p className="text-center text-white/80 mb-12 max-w-2xl mx-auto">
-            I'm available for consulting, speaking engagements, and research collaborations. 
-            Whether you have a specific project in mind or just want to discuss potential opportunities, 
-            I'd love to hear from you.
-          </p>
-  
-          <div className="grid md:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-lg">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white placeholder-white/40 focus:outline-none focus:ring-2 
-                             focus:ring-white/20 transition-all"
-                    placeholder="John Doe"
-                  />
-                </div>
-  
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                    Your Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white placeholder-white/40 focus:outline-none focus:ring-2 
-                             focus:ring-white/20 transition-all"
-                    placeholder="john@example.com"
-                  />
-                </div>
-  
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">
-                    Your Phone (Optional)
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white placeholder-white/40 focus:outline-none focus:ring-2 
-                             focus:ring-white/20 transition-all"
-                    placeholder="+1 (234) 567-8900"
-                  />
-                </div>
-  
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-white mb-2">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white placeholder-white/40 focus:outline-none focus:ring-2 
-                             focus:ring-white/20 transition-all"
-                    placeholder="Let's collaborate"
-                  />
-                </div>
-  
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={5}
-                    className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white placeholder-white/40 focus:outline-none focus:ring-2 
-                             focus:ring-white/20 transition-all resize-none"
-                    placeholder="Your message here..."
-                  />
-                </div>
-  
-                <button
-                  type="submit"
-                  disabled={status === 'sending'}
-                  className="w-full bg-white text-black py-3 rounded-lg font-medium 
-                           hover:bg-white/90 transition-colors flex items-center justify-center gap-2"
-                >
-                  {status === 'sending' ? (
-                    'Sending...'
-                  ) : (
-                    <>
-                      Send Message
-                      <Send size={18} />
-                    </>
-                  )}
-                </button>
-  
-                {status === 'success' && (
-                  <p className="text-green-400 text-center">Message sent successfully!</p>
-                )}
-                {status === 'error' && (
-                  <p className="text-red-400 text-center">Failed to send message. Please try again.</p>
-                )}
-              </form>
-            </div>
-  
-            {/* Contact Information */}
-            <div className="space-y-8">
-              <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-lg">
-                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                  Contact Information
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-white font-medium mb-1">Email</p>
-                    <a href="mailto:eshaanghosh@gmail.com" className="text-white hover:text-white/80 transition-colors">
-                      eshaanghosh@gmail.com
-                    </a>
-                  </div>
-                  <div>
-                    <p className="text-white font-medium mb-1">LinkedIn</p>
-                    <a 
-                      href="https://linkedin.com/in/eshaanghosh" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-white hover:text-white/80 transition-colors"
-                    >
-                      linkedin.com/in/eshaanghosh
-                    </a>
-                  </div>
-                </div>
-              </div>
-  
-              <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-lg">
-                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                  Open to Opportunities
-                </h3>
-                <p className="text-white/80">
-                  I'm interested in challenging projects and collaborative opportunities in AI, 
-                  machine learning, and product development. Feel free to reach out for:
+
+              {status === 'success' && (
+                <p className="text-green-400 text-center" role="alert">
+                  Message sent successfully!
                 </p>
-                <ul className="mt-4 space-y-2 text-white/70">
-                  <li>• Technical consulting</li>
-                  <li>• Speaking engagements</li>
-                  <li>• Research collaboration</li>
-                  <li>• Product strategy</li>
-                </ul>
+              )}
+              {status === 'error' && (
+                <p className="text-red-400 text-center" role="alert">
+                  Failed to send message. Please try again.
+                </p>
+              )}
+            </form>
+          </div>
+
+          {/* Contact Information */}
+          <div className="space-y-8">
+            <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-lg">
+              <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                Contact Information
+              </h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-white font-medium mb-1">Email</p>
+                  <ContactLink href="mailto:eshaanghosh@gmail.com">
+                    eshaanghosh@gmail.com
+                  </ContactLink>
+                </div>
+                <div>
+                  <p className="text-white font-medium mb-1">LinkedIn</p>
+                  <ContactLink href="https://linkedin.com/in/eshaanghosh">
+                    linkedin.com/in/eshaanghosh
+                  </ContactLink>
+                </div>
               </div>
+            </div>
+
+            <div className="bg-white/10 p-8 rounded-2xl backdrop-blur-lg">
+              <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+                Open to Opportunities
+              </h3>
+              <p className="text-white/80">
+                I&apos;m interested in challenging projects and collaborative opportunities in AI, 
+                machine learning, and product development. Feel free to reach out for:
+              </p>
+              <ul className="mt-4 space-y-2 text-white/70" role="list">
+                <li>• Technical consulting</li>
+                <li>• Speaking engagements</li>
+                <li>• Research collaboration</li>
+                <li>• Product strategy</li>
+              </ul>
             </div>
           </div>
         </div>
-      </section>
-    );
-  };
-  
-
-  // Main App Component
-  const App = () => {
-    return (
-      <div className="min-h-screen bg-black text-white">
-        <Navigation />
-        <Hero />
-        <Experience />
-        <Education />   {/* Add this line */}
-        <Projects />
-        <Publications />
-        <Contact />
       </div>
-    );
-  };
+    </section>
+  );
+};
 
-  
-  export default App;
+// Main App Component
+const App = () => {
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <Navigation />
+      <Hero />
+      <Experience />
+      <Education /> 
+      <Projects />
+      <Publications />
+      <Contact />
+    </div>
+  );
+};
+
+export default App;
