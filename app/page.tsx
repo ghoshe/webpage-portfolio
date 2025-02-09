@@ -1,6 +1,8 @@
+
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import emailjs from '@emailjs/browser';
 import Image from 'next/image';
 import { Send } from 'lucide-react';
 
@@ -65,12 +67,12 @@ const Hero = () => {
 
   return (
     <section className="h-screen flex flex-col justify-center items-center text-center p-8 gap-8">
-      <h1 className="text-6xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+      <h1 className="text-9xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
         Eshaan Ghosh
       </h1>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         <p className="text-2xl text-white/80">AI Product Leader & Innovation Strategist</p>
-        <p className="text-2xl text-white/80 max-w-3xl">
+        <p className="text-2xl text-white/80 max-w-6xl">
           Transforming industries through AI-driven solutions and strategic product development
         </p>
       </div>
@@ -404,8 +406,20 @@ const Publications = () => {
       {
         title: "Systems and Methods for Generating and Displaying a Graphical User Interface Including an Animated Graph",
         authors: "Eshaan Ghosh et al.",
-        venue: "U.S. Patent Office",
+        venue: "United States Patent, filed awaiting approval",
         year: "2024"
+      },
+      {
+        title: "Systems and Methods for Generating Data Records and Displaying the Data Records on a Graphical User Interfac",
+        authors: "Eshaan Ghosh et al.",
+        venue: "United States Patent, filed awaiting approval",
+        year: "2024"
+      },
+      {
+        title: "Scalable Multilevel Power Converter",
+        authors: "Eshaan Ghosh et al.",
+        venue: "United States Patent, WO2019236861A8",
+        year: "2010"
       }
     ]
   };
@@ -495,6 +509,9 @@ interface ContactLinkProps {
 
 // Contact Component
 const Contact = () => {
+  useEffect(() => {
+    emailjs.init("l2ufVddnvAzItnByX");
+  }, []);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -509,8 +526,20 @@ const Contact = () => {
     setStatus('sending');
     
     try {
-      // Email sending logic will go here with email service integration
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await emailjs.send(
+        'service_eg_website', // Get this from EmailJS dashboard
+        'template_fhspkk9', // Get this from EmailJS dashboard
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+          to_email: 'eshaanghosh@outlook.com', // Your email
+        },
+        'l2ufVddnvAzItnByX' // Get this from EmailJS dashboard
+      );
+
       setStatus('success');
       setFormData({
         name: '',
@@ -732,8 +761,48 @@ const Contact = () => {
   );
 };
 
+const Footer = () => {
+  const credits = [
+    { name: 'React', icon: '/icons/react.png' },
+    //{ name: 'Next.js', icon: '/icons/nextjs.png' },
+    { name: 'TypeScript', icon: '/icons/typescript.png' },
+    { name: 'Tailwind CSS', icon: '/icons/tailwind.png' },
+    { name: 'Claude', icon: '/icons/claude.png' }
+  ];
+ 
+  return (
+    <footer className="py-8 px-4 bg-black/50 backdrop-blur-lg">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <p className="text-white/60 text-xl">
+            Designed & Built by Eshaan Ghosh
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {credits.map((tech) => (
+              <div key={tech.name} className="flex items-center gap-2">
+                <Image 
+                  src={tech.icon} 
+                  alt={tech.name} 
+                  width={20} 
+                  height={20} 
+                  className="opacity-100 hover:opacity-100 transition-opacity"
+                />
+                <span className="text-white/60 text-sm">{tech.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+ };
+
+
 // Main App Component
 const App = () => {
+  useEffect(() => {
+    emailjs.init("l2ufVddnvAzItnByX");
+  }, []);
   return (
     <div className="min-h-screen bg-black text-white">
       <Navigation />
@@ -743,6 +812,7 @@ const App = () => {
       <Projects />
       <Publications />
       <Contact />
+      <Footer /> 
     </div>
   );
 };
