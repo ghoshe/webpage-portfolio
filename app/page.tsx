@@ -217,10 +217,9 @@ interface EducationItem {
 
 // Education Card Component
 const EducationCard: React.FC<EducationItem> = ({ school, degree, field, duration, logo, website }) => (
-  <div className="bg-white/5 rounded-2xl p-4 md:p-8 hover:-translate-y-1 transition-transform">
-    <div className="flex flex-col md:flex-row items-start gap-4 md:gap-6">
-      {/* Logo - smaller on mobile */}
-      <div className="w-12 h-12 md:w-16 md:h-16 bg-white/10 rounded-xl flex items-center justify-center p-2 shrink-0">
+  <div className="bg-white/5 rounded-2xl p-8 hover:-translate-y-1 transition-transform">
+    <div className="flex items-start gap-6">
+      <div className="w-16 h-16 bg-white/10 rounded-xl flex items-center justify-center p-2">
         <Image 
           src={logo} 
           alt={`${school} logo`}
@@ -230,29 +229,25 @@ const EducationCard: React.FC<EducationItem> = ({ school, degree, field, duratio
           priority
         />
       </div>
-      
-      {/* Content */}
       <div className="flex-1">
-        <div className="flex flex-col md:flex-row justify-between items-start">
+        <div className="flex justify-between items-start">
           <div>
-            {/* Smaller text on mobile */}
-            <h3 className="text-xl md:text-2xl font-semibold text-white mb-1">{degree}</h3>
+            <h3 className="text-2xl font-semibold text-white">{degree}</h3>
             {website ? (
               <a 
                 href={website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-base md:text-lg text-gray-400 hover:text-white transition-colors"
+                className="text-lg text-gray-400 hover:text-white transition-colors"
               >
                 {school}
               </a>
             ) : (
-              <div className="text-base md:text-lg text-gray-400">{school}</div>
+              <div className="text-lg text-gray-400">{school}</div>
             )}
-            <div className="text-sm md:text-md text-gray-500 mt-1">{field}</div>
+            <div className="text-md text-gray-500 mt-1">{field}</div>
           </div>
-          {/* Duration aligned to the right on desktop, under school name on mobile */}
-          <div className="text-sm text-gray-500 mt-2 md:mt-0">{duration}</div>
+          <div className="text-sm text-gray-500">{duration}</div>
         </div>
       </div>
     </div>
@@ -297,11 +292,11 @@ const Education = () => {
   ];
 
   return (
-    <section id="education" className="py-12 md:py-24 px-4 md:px-8 bg-gradient-to-b from-black to-gray-900">
-      <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-16 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+    <section id="education" className="py-24 px-8 bg-gradient-to-b from-black to-gray-900">
+      <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
         Education
       </h2>
-      <div className="max-w-6xl mx-auto space-y-4 md:space-y-8">
+      <div className="max-w-6xl mx-auto space-y-8">
         {education.map((edu, index) => (
           <EducationCard key={index} {...edu} />
         ))}
@@ -326,9 +321,9 @@ const ProjectCard: React.FC<ProjectItem> = ({ title, description, image, tags, l
           </span>
         ))}
       </div>
-      {/*<a href={link} className="inline-block mt-4 text-white/80 hover:text-white transition-opacity">
+      <a href={link} className="inline-block mt-4 text-white/80 hover:text-white transition-opacity">
         Learn More →
-      </a>*/}
+      </a>
     </div>
   </div>
 );
@@ -425,51 +420,7 @@ const Publications = () => {
   ] as const;
 
   const publications: PublicationData = {
-    journals: [
-      {
-        title: "Torque Performance Enhancement in Consequent Pole PMSM Based on Magnet Pole Shape Optimization for Direct-Drive EV",
-        authors: "H. Dhulipati, S. Mukundan, Z. Li, E. Ghosh, J. Tjong and N. C. Kar",
-        venue: "IEEE Transactions on Magnetics",
-        year: "2021"
-      },
-      {
-        title: "Advanced Design Optimization Technique for Torque Profile Improvement in Six-Phase PMSM Using Supervised Machine Learning for Direct-Drive EV",
-        authors: "H. Dhulipati, E. Ghosh, S. Mukundan, P. Korta, J. Tjong and N. C. Kar",
-        venue: "IEEE Transactions on Energy Conversion",
-        year: "2019"
-      },
-      {
-        title: "DNN-Based Predictive Magnetic Flux Reference for Harmonic Compensation Control in Magnetically Unbalanced Induction Motor",
-        authors: "E. Ghosh, A. Mollaeian, S. Kim, J. Tjong and N. C. Kar",
-        venue: "IEEE Transactions on Magnetics",
-        year: "2017"
-      },
-      {
-        title: "3-D Sub-Domain Analytical Model to Calculate Magnetic Flux Density in Induction Machines with Semi-closed Slots Under No-Load Condition",
-        authors: "A. Mollaeian, E. Ghosh, H. Dhulipati, J. Tjong and N. C. Kar",
-        venue: "IEEE Transactions on Magnetics",
-        year: "2017"
-      },
-      {
-        title: "A Novel Control Strategy for Online Harmonic Compensation in Parametrically Unbalanced Induction Motor",
-        authors: "E. Ghosh, A. Mollaeian, W. Hu and N. C. Kar",
-        venue: "IEEE Transactions on Magnetics",
-        year: "2016"
-      }
-    ],
     conferences: [
-      {
-        title: "Thermal Representation of Interior and Surface Mounted PMSMs for Electric Vehicle Application",
-        authors: "P. Roy, F. Ahmed, M. Towhidi, S. Mukundan, H. Dhulipati, E. Ghosh, and N. C. Kar",
-        venue: "IECON 2019 - 45th Annual Conference of the IEEE Industrial Electronics Society",
-        year: "2019"
-      },
-      {
-        title: "Slot-pole Selection Using Adaptive Delta Gradient Descent for Concentrated Wound Consequent Pole PMSM with Reduced EMF and Inductance Harmonics",
-        authors: "H. Dhulipati, S. Mukundan, E. Ghosh, Z. Li, B. G. Vidalanage, J. Tjong and N. C. Kar",
-        venue: "International Conference on Electrical Machines and Systems (ICEMS)",
-        year: "2019"
-      },
       {
         title: "Non-Dominated Sorting Genetic Algorithm Based Investigation of Optimal Odd Slot Numbers for Stator Shifted Fractional-Slot Wound PMSMs",
         authors: "S. Mukundan, H. Dhulipati, E. Ghosh, G. Feng, J. Tjong and N. C. Kar",
@@ -477,34 +428,18 @@ const Publications = () => {
         year: "2019"
       },
       {
-        title: "A Survey of Different Convection Cooling Methods for Electric Vehicle Application",
-        authors: "A. Bourgault, E. Ghosh, and N. C. Kar",
-        venue: "IEEE Canadian Conference on Electrical and Computer Engineering",
-        year: "2019"
-      },
-      {
-        title: "Adagrad Algorithm based Optimal Slot-pole Selection for Reduced Inductance Harmonics in Concentrated Wound Multiphase PMSM",
-        authors: "H. Dhulipati, E. Ghosh, S. Mukundan, J. Tjong and N. C. Kar",
-        venue: "IEEE International Magnetics Conference",
-        year: "2018"
-      },
-      {
-        title: "Investigation of Electromagnetic Torque Capability Reduction of Electric Machine due to Magnetic Property Deterioration of Laminations",
-        authors: "A. Mollaeian, M. Mehdi, E. Ghosh, A. Edrisy, S. Kim, J. Tjong, and N. C. Kar",
-        venue: "IEEE International Conference on Magnetism",
-        year: "2018"
-      },
-      {
         title: "DNN predictive magnetic flux control for harmonics compensation in a magnetically unbalanced induction motor",
         authors: "E. Ghosh, A. Mollaeian, S. Kim and N. C. Kar",
         venue: "IEEE International Magnetics Conference",
         year: "2017"
-      },
+      }
+    ],
+    journals: [
       {
-        title: "Intelligent flux predictive control through online stator inter-turn fault detection for fault-tolerant control of an induction motor",
-        authors: "E. Ghosh, A. Mollaeian, S. Kim, J. Tjong and N. C. Kar",
-        venue: "IEEE International Conference on Industrial Technology (ICIT)",
-        year: "2017"
+        title: "Advanced Design Optimization Technique for Torque Profile Improvement in Six-Phase PMSM Using Supervised Machine Learning for Direct-Drive EV",
+        authors: "H. Dhulipati, E. Ghosh, S. Mukundan, P. Korta, J. Tjong and N. C. Kar",
+        venue: "IEEE Transactions on Energy Conversion",
+        year: "2019"
       }
     ],
     patents: [
