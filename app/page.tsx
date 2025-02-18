@@ -29,6 +29,8 @@ interface ProjectItem {
 
 // Navigation Component
 const Navigation = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
   const navItems: NavItem[] = [
     { href: "#experience", label: "Experience" },
     { href: "#education", label: "Education" },
@@ -43,7 +45,18 @@ const Navigation = () => {
         <a href="#" className="text-white text-xl font-semibold hover:opacity-80 transition-opacity">
           Eshaan Ghosh
         </a>
-        <ul className="flex gap-8">
+        
+        {/* Mobile Menu Button */}
+        <button 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="md:hidden text-white"
+          aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+        >
+          {isMenuOpen ? '✕' : '☰'}
+        </button>
+
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex gap-8">
           {navItems.map((item) => (
             <li key={item.href}>
               <a href={item.href} className="text-white/80 hover:text-white transition-opacity">
@@ -52,6 +65,23 @@ const Navigation = () => {
             </li>
           ))}
         </ul>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <ul className="absolute top-full left-0 right-0 flex flex-col w-full bg-black/95 py-4 md:hidden">
+            {navItems.map((item) => (
+              <li key={item.href}>
+                <a 
+                  href={item.href} 
+                  className="block py-2 px-4 text-white/80 hover:text-white transition-opacity"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </nav>
   );
@@ -66,42 +96,41 @@ const Hero = () => {
   ];
 
   return (
-    <section className="h-screen flex flex-col justify-center items-center text-center p-8 gap-8">
-      <h1 className="text-9xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+    <section className="h-screen flex flex-col justify-center items-center text-center p-4 md:p-8 gap-6 md:gap-8">
+      <h1 className="text-5xl md:text-9xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
         Eshaan Ghosh
       </h1>
-      <div className="flex flex-col gap-6">
-        <p className="text-2xl text-white/80">AI Product Leader & Innovation Strategist</p>
-        <p className="text-2xl text-white/80 max-w-6xl">
+      <div className="flex flex-col gap-4 md:gap-6">
+        <p className="text-xl md:text-2xl text-white/80">AI Product Leader & Innovation Strategist</p>
+        <p className="text-xl md:text-2xl text-white/80 max-w-6xl">
           Transforming industries through AI-driven solutions and strategic product development
         </p>
       </div>
       
-      <div className="flex justify-center gap-16 my-8">
+      <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16 my-4 md:my-8">
         {stats.map((stat, index) => (
           <div key={index} className="text-center">
-            <div className="text-4xl font-bold mb-2">{stat.number}</div>
+            <div className="text-3xl md:text-4xl font-bold mb-2">{stat.number}</div>
             <div className="text-sm text-white/60">{stat.label}</div>
           </div>
         ))}
       </div>
 
-      <a href="#contact" className="bg-white text-black px-8 py-4 rounded-full font-medium hover:scale-105 transition-transform">
+      <a href="#contact" className="bg-white text-black px-6 md:px-8 py-3 md:py-4 rounded-full font-medium hover:scale-105 transition-transform">
         Get in Touch
       </a>
     </section>
   );
 };
-
 // Experience Card Component
 const ExperienceCard: React.FC<ExperienceItem> = ({ role, company, duration, achievements }) => (
-  <div className="bg-white/5 rounded-2xl p-8 hover:-translate-y-1 transition-transform">
-    <div className="flex justify-between items-start mb-4">
+  <div className="bg-white/5 rounded-2xl p-4 md:p-8 hover:-translate-y-1 transition-transform">
+    <div className="flex flex-col md:flex-row justify-between items-start mb-4">
       <div>
-        <div className="text-2xl font-semibold text-white">{role}</div>
-        <div className="text-lg text-gray-400">{company}</div>
+        <div className="text-xl md:text-2xl font-semibold text-white">{role}</div>
+        <div className="text-base md:text-lg text-gray-400">{company}</div>
       </div>
-      <div className="text-sm text-gray-500">{duration}</div>
+      <div className="text-sm text-gray-500 mt-2 md:mt-0">{duration}</div>
     </div>
     <ul className="space-y-4">
       {achievements.map((achievement, index) => (
@@ -136,6 +165,17 @@ const Experience = () => {
         "Directed development of ML production pipelines for Customer Care app.",
         "Reduced cloud infrastructure costs by 20% through optimization.",
         "Primary data solutions architect for multiple transactional and analytics projects."
+      ]
+    },
+    {
+      role: "Research and Development Engineering Manager",
+      company: "Centre for Hybrid Automotive Research and Green Energy (CHARGE)",
+      duration: "2018 - 2019",
+      achievements: [
+        "Managed and led a team of 30 Ph.D. researchers and engineers in developing a Machine Learning-based model for electric vehicles, enhancing predictive safety capabilities and vehicular optimization.",
+        "Developed research and development projects focusing on electric vehicle motor and control systems for major automotive companies.",
+        "Directed the formulation and approval of research project specifications, ensuring compatibility with required engineering standards and codes for new product designs.",
+        "Spearheaded collaborative projects with industry partners, government research labs, and universities, securing multi-million dollar funding for advanced research initiatives.",
       ]
     },
     {
@@ -349,21 +389,21 @@ interface PublicationData {
 
 // Publications Helper Components
 const PublicationCategory: React.FC<CategoryProps> = ({ title, children }) => (
-  <div className="mb-12">
-    <h3 className="text-xl font-semibold mb-6 text-white/90">{title}</h3>
-    <div className="space-y-6">
+  <div className="mb-8 md:mb-12">
+    <h3 className="text-xl font-semibold mb-4 md:mb-6 text-white/90 px-4 md:px-0">{title}</h3>
+    <div className="space-y-4 md:space-y-6">
       {children}
     </div>
   </div>
 );
 
 const PublicationItem: React.FC<PublicationItem> = ({ title, authors, venue, year }) => (
-  <div className="bg-white/10 p-6 rounded-xl hover:bg-white/15 transition-colors backdrop-blur-sm">
-    <h4 className="text-white font-medium mb-2">{title}</h4>
-    <p className="text-white/80 text-sm mb-2">{authors}</p>
-    <div className="flex justify-between items-center">
-      <span className="text-white/60 text-sm italic">{venue}</span>
-      <span className="text-white/80 text-sm font-medium">{year}</span>
+  <div className="bg-white/10 p-4 md:p-6 rounded-xl hover:bg-white/15 transition-colors backdrop-blur-sm mx-4 md:mx-0">
+    <h4 className="text-lg md:text-xl font-medium mb-2">{title}</h4>
+    <p className="text-sm md:text-base text-white/80 mb-2">{authors}</p>
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-1">
+      <span className="text-sm text-white/60 italic">{venue}</span>
+      <span className="text-sm font-medium text-white/80">{year}</span>
     </div>
   </div>
 );
@@ -432,37 +472,37 @@ const Publications = () => {
 
   return (
     <section id="publications" className="py-24 px-8 bg-black">
-      <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+      <h2 className="text-3xl md:text-4xl font-bold text-center mb-8 md:mb-16 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent px-4 md:px-0">
         Publications & Patents
       </h2>
       
-      <div className="max-w-4xl mx-auto mb-16 grid grid-cols-3 gap-8">
+      <div className="max-w-4xl mx-auto mb-8 md:mb-16 grid grid-cols-3 gap-3 md:gap-8 px-4 md:px-0">
         {stats.map((stat, index) => (
-          <div key={index} className="bg-white/10 p-8 rounded-xl text-center backdrop-blur-lg">
-            <div className="text-5xl font-bold mb-3 text-white">{stat.number}</div>
-            <div className="text-lg text-white/80">{stat.label}</div>
+          <div key={index} className="bg-white/10 p-4 md:p-8 rounded-xl text-center backdrop-blur-lg">
+            <div className="text-3xl md:text-5xl font-bold mb-2 md:mb-3 text-white">{stat.number}</div>
+            <div className="text-sm md:text-lg text-white/80">{stat.label}</div>
           </div>
         ))}
       </div>
 
-      <div className="max-w-4xl mx-auto mb-12">
-        <div className="flex justify-center gap-4 flex-wrap">
-          {categories.map(category => (
-            <button
-              key={category.id}
-              onClick={() => setFilter(category.id)}
-              className={`px-6 py-2 rounded-full transition-colors ${
-                filter === category.id 
-                  ? 'bg-white text-black font-medium' 
-                  : 'bg-white/10 text-white hover:bg-white/20'
-              }`}
-              aria-label={`Filter by ${category.label}`}
-            >
-              {category.label}
-            </button>
-          ))}
+      <div className="max-w-4xl mx-auto mb-8 md:mb-12">
+          <div className="flex justify-start md:justify-center gap-2 md:gap-4 flex-wrap px-4 md:px-0 overflow-x-auto">
+            {categories.map(category => (
+              <button
+                key={category.id}
+                onClick={() => setFilter(category.id)}
+                className={`px-4 md:px-6 py-2 rounded-full transition-colors whitespace-nowrap ${
+                  filter === category.id 
+                    ? 'bg-white text-black font-medium' 
+                    : 'bg-white/10 text-white hover:bg-white/20'
+                }`}
+                aria-label={`Filter by ${category.label}`}
+              >
+                {category.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
 
       <div className="max-w-4xl mx-auto">
         {(filter === 'all' || filter === 'conference') && (
